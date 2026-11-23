@@ -25,7 +25,7 @@ pipeline {
             }
             post {
                 always {
-                    junit allowEmptyResults true, testResults 'backendtargetsurefire-reports.xml'
+                    junit allowEmptyResults: true, testResults: 'backend/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
 
         stage('Archivage') {
             steps {
-                archiveArtifacts artifacts 'backendtarget.jar', fingerprint true
+                archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
             }
         }
     }
@@ -48,14 +48,14 @@ pipeline {
     post {
         failure {
             emailext(
-                to 'ayetteboubaya@gmail.com',
-                subject ÉCHEC du build ${env.JOB_NAME} #${env.BUILD_NUMBER},
-                body Le build a échoué.
+                to: 'ayetteboubaya@gmail.com',
+                subject: "ECHEC du build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """Le build a echoue.
 
-Job  ${env.JOB_NAME}
-Build  #${env.BUILD_NUMBER}
-Détails  ${env.BUILD_URL}console
-
+Job : ${env.JOB_NAME}
+Build : #${env.BUILD_NUMBER}
+Details : ${env.BUILD_URL}console
+"""
             )
         }
     }
